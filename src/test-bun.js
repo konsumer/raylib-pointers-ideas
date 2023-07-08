@@ -5,7 +5,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import { dlopen, suffix, ptr } from 'bun:ffi'
+import { dlopen, suffix, ptr, toArrayBuffer } from 'bun:ffi'
 
 const ffi = {
    "rp_InitWindow": {
@@ -163,6 +163,7 @@ class Color {
   constructor(init = {}, _address) {
     this._size = 4
     this._address = _address || symbols.rp_malloc(this._size)
+    this._dv = new DataView(toArrayBuffer(this._address, 0, this._size))
 
     this.r = init.r || 0
     this.g = init.g || 0
@@ -171,31 +172,31 @@ class Color {
   }
   
   get r () {
-    return symbols.rp_get_u8(this._address + 0)
+    return this._dv.getUint8(0, true)
   }
   set r (r) {
-    symbols.rp_set_u8(this._address + 0, r)
+    this._dv.setUint8(0, r)
   }
 
   get g () {
-    return symbols.rp_get_u8(this._address + 1)
+    return this._dv.getUint8(1, true)
   }
   set g (g) {
-    symbols.rp_set_u8(this._address + 1, g)
+     this._dv.setUint8(1, g)
   }
 
   get b () {
-    return symbols.rp_get_u8(this._address + 2)
+    return this._dv.getUint8(2, true)
   }
   set b (b) {
-    symbols.rp_set_u8(this._address + 2, b)
+     this._dv.setUint8(2, b)
   }
 
   get a () {
-    return symbols.rp_get_u8(this._address + 3)
+    return this._dv.getUint8(3, true)
   }
   set a (a) {
-    symbols.rp_set_u8(this._address + 3, a)
+     this._dv.setUint8(3, a)
   }
 }
 
@@ -203,6 +204,7 @@ class Texture {
   constructor(init = {}, _address) {
     this._size = 20
     this._address = _address || symbols.rp_malloc(this._size)
+    this._dv = new DataView(toArrayBuffer(this._address, 0, this._size))
 
     this.id = init.id || 0
     this.width = init.width || 0
@@ -212,44 +214,67 @@ class Texture {
   }
   
   get id () {
-    return symbols.rp_get_u32(this._address + 0)
+    return this._dv.getUint32(0, true)
   }
   set id (id) {
-    symbols.rp_set_u32(this._address + 0, id)
+    this._dv.setUint32(0, id)
   }
 
   get width () {
-    return symbols.rp_get_i32(this._address + 4)
+    return this._dv.getInt32(4, true)
   }
   set width (width) {
-    symbols.rp_set_i32(this._address + 4, width)
+    this._dv.setInt32(4, width)
   }
 
   get height () {
-    return symbols.rp_get_i32(this._address + 8)
+    return this._dv.getInt32(8, true)
   }
   set height (height) {
-    symbols.rp_set_i32(this._address + 8, height)
+    this._dv.setInt32(8, height)
   }
 
   get mipmaps () {
-    return symbols.rp_get_i32(this._address + 12)
+    return this._dv.getInt32(12, true)
   }
   set mipmaps (mipmaps) {
-    symbols.rp_set_i32(this._address + 12, mipmaps)
+    this._dv.setInt32(12, mipmaps)
   }
 
   get format () {
-    return symbols.rp_get_i32(this._address + 16)
+    return this._dv.getInt32(16, true)
   }
   set format (format) {
-    symbols.rp_set_i32(this._address + 16, format)
+    this._dv.setInt32(16, format)
   }
 }
 
 const LIGHTGRAY = new Color({r: 200, g: 200, b: 200, a: 255}) // Light Gray
+const GRAY = new Color({r: 130, g: 130, b: 130, a: 255}) // Gray
+const DARKGRAY = new Color({r: 80, g: 80, b: 80, a: 255}) // Dark Gray
+const YELLOW = new Color({r: 253, g: 249, b: 0, a: 255}) // Yellow
+const GOLD = new Color({r: 255, g: 203, b: 0, a: 255}) // Gold
+const ORANGE = new Color({r: 255, g: 161, b: 0, a: 255}) // Orange
+const PINK = new Color({r: 255, g: 109, b: 194, a: 255}) // Pink
+const RED = new Color({r: 230, g: 41, b: 55, a: 255}) // Red
+const MAROON = new Color({r: 190, g: 33, b: 55, a: 255}) // Maroon
+const GREEN = new Color({r: 0, g: 228, b: 48, a: 255}) // Green
+const LIME = new Color({r: 0, g: 158, b: 47, a: 255}) // Lime
+const DARKGREEN = new Color({r: 0, g: 117, b: 44, a: 255}) // Dark Green
+const SKYBLUE = new Color({r: 102, g: 191, b: 255, a: 255}) // Sky Blue
+const BLUE = new Color({r: 0, g: 121, b: 241, a: 255}) // Blue
+const DARKBLUE = new Color({r: 0, g: 82, b: 172, a: 255}) // Dark Blue
+const PURPLE = new Color({r: 200, g: 122, b: 255, a: 255}) // Purple
+const VIOLET = new Color({r: 135, g: 60, b: 190, a: 255}) // Violet
+const DARKPURPLE = new Color({r: 112, g: 31, b: 126, a: 255}) // Dark Purple
+const BEIGE = new Color({r: 211, g: 176, b: 131, a: 255}) // Beige
+const BROWN = new Color({r: 127, g: 106, b: 79, a: 255}) // Brown
+const DARKBROWN = new Color({r: 76, g: 63, b: 47, a: 255}) // Dark Brown
 const WHITE = new Color({r: 255, g: 255, b: 255, a: 255}) // White
-const RAYWHITE = new Color({r: 245, g: 245, b: 245, a: 255}) // My own White (raylib logo)
+const BLACK = new Color({r: 0, g: 0, b: 0, a: 255}) // Black
+const BLANK = new Color({r: 0, g: 0, b: 0, a: 0}) // Blank (Transparent)
+const MAGENTA = new Color({r: 255, g: 0, b: 255, a: 255}) // Magenta
+const RAYWHITE = new Color({r: 245, g: 245, b: 245, a: 255}) // My own White (const logo)
 
 const InitWindow = (width, height, title) => symbols.rp_InitWindow(width, height, cstr(title))
 const WindowShouldClose = symbols.rp_WindowShouldClose
@@ -264,6 +289,13 @@ const DrawTexture = (texture, tint) =>  symbols.rp_DrawTexture(texture._address,
 const LoadTexture = (filename) => {
   const ret = new Texture()
   symbols.rp_LoadTexture(ret._address, cstr(filename))
+  console.log(ret, {
+    id: ret.id,
+    width: ret.width,
+    height: ret.height,
+    mipmaps: ret.mipmaps,
+    format: ret.format
+  })
   return ret
 }
 
@@ -278,7 +310,8 @@ while (!WindowShouldClose()) {
   BeginDrawing()
   ClearBackground(RAYWHITE)
   DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
-  DrawTexture(texBunny, 100, 100, WHITE)
+  // this segfaults because texure is not returning right from LoadTexture
+  // DrawTexture(texBunny, 100, 100, WHITE)
   DrawFPS(10, 10)
   EndDrawing()
 }
