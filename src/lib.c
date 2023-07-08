@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include <memory.h>
+#include <stdlib.h>
 
 
 // TODO: put more in here for wasm, etc
@@ -20,6 +21,41 @@
 #ifndef RLP_EXPORT
     #define RLP_EXPORT
 #endif
+
+
+// these are simple wrappers used as utils from the host
+// in the case of bun/wasm this gives access to mem in pointers
+void* rp_malloc(size_t size) {
+  return malloc(size);
+}
+
+void rp_free(void* ptr) {
+  free(ptr);
+}
+
+unsigned char rp_get_u8(uint8_t* ptr) {
+  return &ptr;
+}
+
+void rp_set_u8(unsigned char* ptr, unsigned char val) {
+  *ptr = val;
+}
+
+unsigned int rp_get_u32(unsigned int* ptr) {
+  return &ptr;
+}
+
+void rp_set_u32(unsigned int* ptr, unsigned int val) {
+  *ptr = val;
+}
+
+int rp_get_i32(int* ptr) {
+  return &ptr;
+}
+
+void rp_set_i32(int* ptr, int val) {
+  *ptr = val;
+}
 
 // these are just passed through, so name is the same
 RLP_EXPORT void rp_InitWindow(int width, int height, const char *title);
@@ -80,7 +116,3 @@ void rp_LoadTexture(Texture2D* ret, const char *fileName) {
   Texture2D val = LoadTexture(fileName);
   memmove(ret, &val, sizeof(Texture2D));
 }
-
-
-
-
