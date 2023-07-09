@@ -1,5 +1,5 @@
 // pointer-raylib
-// File generated on 2023-07-09T18:07:48.776Z
+// File generated on 2023-07-09T18:18:38.701Z
 
 #include "raylib.h"
 #include <memory.h>
@@ -587,8 +587,8 @@ RLP_EXPORT void rp_SetShaderValueMatrix(Shader* shader, int locIndex, Matrix* ma
 /**
  * Set shader uniform value for texture (sampler2d)
  */
-RLP_EXPORT void rp_SetShaderValueTexture(Shader* shader, int locIndex, Texture2D texture) {
-    SetShaderValueTexture(*shader, locIndex, texture);
+RLP_EXPORT void rp_SetShaderValueTexture(Shader* shader, int locIndex, Texture2D* texture) {
+    SetShaderValueTexture(*shader, locIndex, *texture);
 }
     
 /**
@@ -1338,8 +1338,8 @@ RLP_EXPORT void rp_UpdateCameraPro(Camera * camera, Vector3* movement, Vector3* 
 /**
  * Set texture and rectangle to be used on shapes drawing
  */
-RLP_EXPORT void rp_SetShapesTexture(Texture2D texture, Rectangle* source) {
-    SetShapesTexture(texture, *source);
+RLP_EXPORT void rp_SetShapesTexture(Texture2D* texture, Rectangle* source) {
+    SetShapesTexture(*texture, *source);
 }
     
 /**
@@ -1707,8 +1707,8 @@ RLP_EXPORT void rp_LoadImageFromMemory(Image* output, const char * fileType, con
 /**
  * Load image from GPU texture data
  */
-RLP_EXPORT void rp_LoadImageFromTexture(Image* output, Texture2D texture) {
-    Image val = LoadImageFromTexture(texture);
+RLP_EXPORT void rp_LoadImageFromTexture(Image* output, Texture2D* texture) {
+    Image val = LoadImageFromTexture(*texture);
     memcpy(output, &val, sizeof(Image));
 }
     
@@ -2172,15 +2172,17 @@ RLP_EXPORT void rp_ImageDrawTextEx(Image * dst, Font* font, const char * text, V
 /**
  * Load texture from file into GPU memory (VRAM)
  */
-RLP_EXPORT Texture2D rp_LoadTexture(const char * fileName) {
-    return LoadTexture(fileName);
+RLP_EXPORT void rp_LoadTexture(Texture2D* output, const char * fileName) {
+    Texture2D val = LoadTexture(fileName);
+    memcpy(output, &val, sizeof(Texture2D));
 }
     
 /**
  * Load texture from image data
  */
-RLP_EXPORT Texture2D rp_LoadTextureFromImage(Image* image) {
-    return LoadTextureFromImage(*image);
+RLP_EXPORT void rp_LoadTextureFromImage(Texture2D* output, Image* image) {
+    Texture2D val = LoadTextureFromImage(*image);
+    memcpy(output, &val, sizeof(Texture2D));
 }
     
 /**
@@ -2200,15 +2202,15 @@ RLP_EXPORT RenderTexture2D rp_LoadRenderTexture(int width, int height) {
 /**
  * Check if a texture is ready
  */
-RLP_EXPORT bool rp_IsTextureReady(Texture2D texture) {
-    return IsTextureReady(texture);
+RLP_EXPORT bool rp_IsTextureReady(Texture2D* texture) {
+    return IsTextureReady(*texture);
 }
     
 /**
  * Unload texture from GPU memory (VRAM)
  */
-RLP_EXPORT void rp_UnloadTexture(Texture2D texture) {
-    UnloadTexture(texture);
+RLP_EXPORT void rp_UnloadTexture(Texture2D* texture) {
+    UnloadTexture(*texture);
 }
     
 /**
@@ -2228,15 +2230,15 @@ RLP_EXPORT void rp_UnloadRenderTexture(RenderTexture2D target) {
 /**
  * Update GPU texture with new data
  */
-RLP_EXPORT void rp_UpdateTexture(Texture2D texture, const void * pixels) {
-    UpdateTexture(texture, pixels);
+RLP_EXPORT void rp_UpdateTexture(Texture2D* texture, const void * pixels) {
+    UpdateTexture(*texture, pixels);
 }
     
 /**
  * Update GPU texture rectangle with new data
  */
-RLP_EXPORT void rp_UpdateTextureRec(Texture2D texture, Rectangle* rec, const void * pixels) {
-    UpdateTextureRec(texture, *rec, pixels);
+RLP_EXPORT void rp_UpdateTextureRec(Texture2D* texture, Rectangle* rec, const void * pixels) {
+    UpdateTextureRec(*texture, *rec, pixels);
 }
     
 /**
@@ -2249,57 +2251,57 @@ RLP_EXPORT void rp_GenTextureMipmaps(Texture2D * texture) {
 /**
  * Set texture scaling filter mode
  */
-RLP_EXPORT void rp_SetTextureFilter(Texture2D texture, int filter) {
-    SetTextureFilter(texture, filter);
+RLP_EXPORT void rp_SetTextureFilter(Texture2D* texture, int filter) {
+    SetTextureFilter(*texture, filter);
 }
     
 /**
  * Set texture wrapping mode
  */
-RLP_EXPORT void rp_SetTextureWrap(Texture2D texture, int wrap) {
-    SetTextureWrap(texture, wrap);
+RLP_EXPORT void rp_SetTextureWrap(Texture2D* texture, int wrap) {
+    SetTextureWrap(*texture, wrap);
 }
     
 /**
  * Draw a Texture2D
  */
-RLP_EXPORT void rp_DrawTexture(Texture2D texture, int posX, int posY, Color* tint) {
-    DrawTexture(texture, posX, posY, *tint);
+RLP_EXPORT void rp_DrawTexture(Texture2D* texture, int posX, int posY, Color* tint) {
+    DrawTexture(*texture, posX, posY, *tint);
 }
     
 /**
  * Draw a Texture2D with position defined as Vector2
  */
-RLP_EXPORT void rp_DrawTextureV(Texture2D texture, Vector2* position, Color* tint) {
-    DrawTextureV(texture, *position, *tint);
+RLP_EXPORT void rp_DrawTextureV(Texture2D* texture, Vector2* position, Color* tint) {
+    DrawTextureV(*texture, *position, *tint);
 }
     
 /**
  * Draw a Texture2D with extended parameters
  */
-RLP_EXPORT void rp_DrawTextureEx(Texture2D texture, Vector2* position, float rotation, float scale, Color* tint) {
-    DrawTextureEx(texture, *position, rotation, scale, *tint);
+RLP_EXPORT void rp_DrawTextureEx(Texture2D* texture, Vector2* position, float rotation, float scale, Color* tint) {
+    DrawTextureEx(*texture, *position, rotation, scale, *tint);
 }
     
 /**
  * Draw a part of a texture defined by a rectangle
  */
-RLP_EXPORT void rp_DrawTextureRec(Texture2D texture, Rectangle* source, Vector2* position, Color* tint) {
-    DrawTextureRec(texture, *source, *position, *tint);
+RLP_EXPORT void rp_DrawTextureRec(Texture2D* texture, Rectangle* source, Vector2* position, Color* tint) {
+    DrawTextureRec(*texture, *source, *position, *tint);
 }
     
 /**
  * Draw a part of a texture defined by a rectangle with 'pro' parameters
  */
-RLP_EXPORT void rp_DrawTexturePro(Texture2D texture, Rectangle* source, Rectangle* dest, Vector2* origin, float rotation, Color* tint) {
-    DrawTexturePro(texture, *source, *dest, *origin, rotation, *tint);
+RLP_EXPORT void rp_DrawTexturePro(Texture2D* texture, Rectangle* source, Rectangle* dest, Vector2* origin, float rotation, Color* tint) {
+    DrawTexturePro(*texture, *source, *dest, *origin, rotation, *tint);
 }
     
 /**
  * Draws a texture (or part of it) that stretches or shrinks nicely
  */
-RLP_EXPORT void rp_DrawTextureNPatch(Texture2D texture, NPatchInfo* nPatchInfo, Rectangle* dest, Vector2* origin, float rotation, Color* tint) {
-    DrawTextureNPatch(texture, *nPatchInfo, *dest, *origin, rotation, *tint);
+RLP_EXPORT void rp_DrawTextureNPatch(Texture2D* texture, NPatchInfo* nPatchInfo, Rectangle* dest, Vector2* origin, float rotation, Color* tint) {
+    DrawTextureNPatch(*texture, *nPatchInfo, *dest, *origin, rotation, *tint);
 }
     
 /**
@@ -2973,22 +2975,22 @@ RLP_EXPORT void rp_DrawBoundingBox(BoundingBox* box, Color* color) {
 /**
  * Draw a billboard texture
  */
-RLP_EXPORT void rp_DrawBillboard(Camera camera, Texture2D texture, Vector3* position, float size, Color* tint) {
-    DrawBillboard(camera, texture, *position, size, *tint);
+RLP_EXPORT void rp_DrawBillboard(Camera camera, Texture2D* texture, Vector3* position, float size, Color* tint) {
+    DrawBillboard(camera, *texture, *position, size, *tint);
 }
     
 /**
  * Draw a billboard texture defined by source
  */
-RLP_EXPORT void rp_DrawBillboardRec(Camera camera, Texture2D texture, Rectangle* source, Vector3* position, Vector2* size, Color* tint) {
-    DrawBillboardRec(camera, texture, *source, *position, *size, *tint);
+RLP_EXPORT void rp_DrawBillboardRec(Camera camera, Texture2D* texture, Rectangle* source, Vector3* position, Vector2* size, Color* tint) {
+    DrawBillboardRec(camera, *texture, *source, *position, *size, *tint);
 }
     
 /**
  * Draw a billboard texture defined by source and rotation
  */
-RLP_EXPORT void rp_DrawBillboardPro(Camera camera, Texture2D texture, Rectangle* source, Vector3* position, Vector3* up, Vector2* size, Vector2* origin, float rotation, Color* tint) {
-    DrawBillboardPro(camera, texture, *source, *position, *up, *size, *origin, rotation, *tint);
+RLP_EXPORT void rp_DrawBillboardPro(Camera camera, Texture2D* texture, Rectangle* source, Vector3* position, Vector3* up, Vector2* size, Vector2* origin, float rotation, Color* tint) {
+    DrawBillboardPro(camera, *texture, *source, *position, *up, *size, *origin, rotation, *tint);
 }
     
 /**
@@ -3168,8 +3170,8 @@ RLP_EXPORT void rp_UnloadMaterial(Material* material) {
 /**
  * Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
  */
-RLP_EXPORT void rp_SetMaterialTexture(Material * material, int mapType, Texture2D texture) {
-    SetMaterialTexture(material, mapType, texture);
+RLP_EXPORT void rp_SetMaterialTexture(Material * material, int mapType, Texture2D* texture) {
+    SetMaterialTexture(material, mapType, *texture);
 }
     
 /**

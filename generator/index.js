@@ -24,10 +24,11 @@ out.push(`// pointer-raylib
 
 `)
 
-const structs = []
-for (const struct of raylib.structs) {
-  structs.push(struct.name)
-}
+const structs = [
+  ...raylib.structs.map(s => s.name)
+]
+
+structs.push('Texture2D')
 
 for (const func of raylib.functions) {
   out.push('/**')
