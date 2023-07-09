@@ -93,8 +93,7 @@ const ffi = {
 
 const { symbols } = dlopen(`${__dirname}/../build/libraylib_pointers.${suffix}`, ffi)
 
-const stringMemo = {}
-const cstr = s => stringMemo[s] ? stringMemo[s] : (stringMemo[s] = ptr(Buffer.from((s || '') + '\0'))) && stringMemo[s]
+const cstr = s => ptr(Buffer.from((s || '') + '\0'))
 
 // these are wrappers to make it all look more like normal raylib in js, this will also be generated
 
@@ -236,7 +235,7 @@ const LoadTexture = (filename) => {
 // here the actual demo starts
 
 InitWindow(800, 450, "raylib-pointers test program")
-// SetTargetFPS(60)
+SetTargetFPS(60)
 
 const texBunny = LoadTexture("wabbit_alpha.png")
 
@@ -245,7 +244,14 @@ const s = cstr("Congrats! You created your first window!")
 while (!WindowShouldClose()) {
   BeginDrawing()
   ClearBackground(RAYWHITE)
-  DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
+  
+  // EXC_BAD_ACCESS after many frames
+  // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
+  
+  // this is a hack that uses a pre-allocated string, since it makes bun grumpy to allocate strings in a loop
+  // but it eventually corrupts, too
+  symbols.rp_DrawText(s, 190, 200, 20, LIGHTGRAY._address)
+
   DrawTexture(texBunny, 100, 100, WHITE)
   DrawFPS(10, 10)
   EndDrawing()
