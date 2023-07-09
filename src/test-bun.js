@@ -232,7 +232,9 @@ const DrawTexture = (texture, tint) =>  symbols.rp_DrawTexture(texture._address,
 const LoadTexture = (filename) => {
   const ret = new Texture()
   symbols.rp_LoadTexture(ret._address, cstr(filename))
-  console.log(ret, {
+  console.log({
+    ...ret,
+    // trigger getters
     id: ret.id,
     width: ret.width,
     height: ret.height,

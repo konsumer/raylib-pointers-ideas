@@ -79,5 +79,5 @@ void rp_DrawTexture(Texture2D* texture, int posX, int posY, Color* tint) {
 
 void rp_LoadTexture(Texture2D* ret, const char *fileName) {
   Texture2D val = LoadTexture(fileName);
-  memmove(ret, &val, sizeof(Texture2D));
+  memcpy(ret, &val, sizeof(Texture2D));
 }
