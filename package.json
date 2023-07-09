@@ -2,9 +2,10 @@
   "name": "raylib-pointers",
   "version": "0.0.1",
   "description": "The idea here is that this is raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "node generator/index.js"
+    "generate": "node generator/index.js src/lib.c",
+    "build": "npm run generate && cmake -B build && cmake --build build"
   },
   "repository": {
     "type": "git",

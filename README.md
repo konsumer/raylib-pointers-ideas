@@ -5,8 +5,9 @@ Currently, this is a minimal POC.
 This is similar to what emscripten does, and should help with lower-to-the-ground wasm, but also make it easier to bind in bun (and more) which works better with pointers.
 
 ```
-cmake -B build
-cmake --build build
+npm i
+
+npm run build
 ```
 
 You can see what I am trying to do in `src/test.c`, and similar will be implemented for other targets, like `src/test-bun.js`
