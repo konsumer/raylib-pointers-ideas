@@ -1,24 +1,13 @@
 // pointer-raylib API
-// File generated on 2023-07-09T20:43:15.639Z
+// File generated on 2023-07-09T21:24:39.191Z
 
+#include <memory.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #ifndef RLP_EXPORT
   #define RLP_EXPORT
 #endif
-
-typedef struct float2 {
-    float v[2];
-} float2;
-
-
-typedef struct float4 {
-    float v[4];
-} float4;
-
-typedef struct char32 {
-    char v[32];
-} char32;
 
 // TODO: not sure how to map these
 typedef void rAudioProcessor;
@@ -76,11 +65,6 @@ typedef struct Matrix {
   float m11; // Matrix fourth row (4 components)
   float m15; // Matrix fourth row (4 components)
 } Matrix;
-
-typedef struct Matrix2 {
-    Matrix v[2];
-} Matrix2;
-
 
 /*
  * Color, 4 components, R8G8B8A8 (32bit)
@@ -241,7 +225,7 @@ typedef struct MaterialMap {
 typedef struct Material {
   Shader shader; // Material shader
   MaterialMap * maps; // Material maps array (MAX_MATERIAL_MAPS)
-  float4 params; // Material generic parameters (if required)
+  float params[4]; // Material generic parameters (if required)
 } Material;
 
 /*
@@ -257,7 +241,7 @@ typedef struct Transform {
  * Bone, skeletal animation bone
  */
 typedef struct BoneInfo {
-  char32 name; // Bone name
+  char name[32]; // Bone name
   int parent; // Bone parent
 } BoneInfo;
 
@@ -365,22 +349,22 @@ typedef struct VrDeviceInfo {
   float eyeToScreenDistance; // Distance between eye and display in meters
   float lensSeparationDistance; // Lens separation distance in meters
   float interpupillaryDistance; // IPD (distance between pupils) in meters
-  float4 lensDistortionValues; // Lens distortion constant parameters
-  float[4] chromaAbCorrection; // Chromatic aberration correction parameters
+  float lensDistortionValues[4]; // Lens distortion constant parameters
+  float chromaAbCorrection[4]; // Chromatic aberration correction parameters
 } VrDeviceInfo;
 
 /*
  * VrStereoConfig, VR stereo rendering configuration for simulator
  */
 typedef struct VrStereoConfig {
-  Matrix2 projection; // VR projection matrices (per eye)
-  Matrix[2] viewOffset; // VR view offset matrices (per eye)
-  float2 leftLensCenter; // VR left lens center
-  float[2] rightLensCenter; // VR right lens center
-  float2 leftScreenCenter; // VR left screen center
-  float[2] rightScreenCenter; // VR right screen center
-  float2 scale; // VR distortion scale
-  float[2] scaleIn; // VR distortion scale in
+  Matrix projection[2]; // VR projection matrices (per eye)
+  Matrix viewOffset[2]; // VR view offset matrices (per eye)
+  float leftLensCenter[2]; // VR left lens center
+  float rightLensCenter[2]; // VR right lens center
+  float leftScreenCenter[2]; // VR left screen center
+  float rightScreenCenter[2]; // VR right screen center
+  float scale[2]; // VR distortion scale
+  float scaleIn[2]; // VR distortion scale in
 } VrStereoConfig;
 
 /*

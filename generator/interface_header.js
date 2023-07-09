@@ -15,23 +15,13 @@ const out = []
 out.push(`// pointer-raylib API
 // File generated on ${(new Date()).toISOString()}
 
+#include <memory.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #ifndef RLP_EXPORT
   #define RLP_EXPORT
 #endif
-
-typedef struct float2 {
-    float v[2];
-} float2;
-
-typedef struct float4 {
-    float v[4];
-} float4;
-
-typedef struct char32 {
-    char v[32];
-} char32;
 
 // TODO: not sure how to map these
 typedef void rAudioProcessor;
@@ -49,15 +39,12 @@ for (const alias of raylib.aliases) {
 
 const structs = Object.keys(mappedStructs)
 
-
-const rf = /([a-zA-Z0-9_]+)\[([0-9]+)\]/gm
-
 for (const struct of Object.values(mappedStructs)) {
   const fields = struct.fields.map(field => {
-      // convert float[16] into float16
-      const m = rf.exec(field.type)
+      const m = (/([a-zA-Z0-9_]+)\[([0-9]+)\]/gm).exec(field.type)
       if (m) {
-        field.type = `${m[1]}${m[2]}`
+        field.type = m[1]
+        field.name = `${field.name}[${m[2]}]`
       }
       return field
     })
@@ -70,14 +57,6 @@ ${fields.map(f => `  ${f.type} ${f.name}; // ${f.description}`).join('\n')}
 } ${struct.name};`)
     for (const alias of (aliases[struct.name] || [])) {
       out.push(`// ${alias.description}\ntypedef ${alias.type} ${alias.name};`)
-    }
-
-    if (struct.name === 'Matrix') {
-      out.push(`
-typedef struct Matrix2 {
-    Matrix v[2];
-} Matrix2;
-`)
     }
 }
 
