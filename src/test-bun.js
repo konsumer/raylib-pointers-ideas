@@ -96,7 +96,7 @@ const ffi = {
 
 const { symbols } = dlopen(`${__dirname}/../build/libraylib_pointers.${suffix}`, ffi)
 
-const cstr = s => ptr(Buffer.from((s || '\0')))
+const cstr = s => ptr(Buffer.from((s || '') + '\0'))
 
 // these are wrappers to make it all look more like normal raylib in js, this will also be generated
 
@@ -157,38 +157,38 @@ class Texture {
   }
   
   get id () {
-    return this._dv.getUint32(0)
+    return this._dv.getUint32(0, true)
   }
   set id (id) {
-    this._dv.setUint32(0, id)
+    this._dv.setUint32(0, id, true)
   }
 
   get width () {
-    return this._dv.getInt32(4)
+    return this._dv.getInt32(4, true)
   }
   set width (width) {
-    this._dv.setInt32(4, width)
+    this._dv.setInt32(4, width, true)
   }
 
   get height () {
-    return this._dv.getInt32(8)
+    return this._dv.getInt32(8, true)
   }
   set height (height) {
-    this._dv.setInt32(8, height)
+    this._dv.setInt32(8, height, true)
   }
 
   get mipmaps () {
-    return this._dv.getInt32(12)
+    return this._dv.getInt32(12, true)
   }
   set mipmaps (mipmaps) {
-    this._dv.setInt32(12, mipmaps)
+    this._dv.setInt32(12, mipmaps, true)
   }
 
   get format () {
-    return this._dv.getInt32(16)
+    return this._dv.getInt32(16, true)
   }
   set format (format) {
-    this._dv.setInt32(16, format)
+    this._dv.setInt32(16, format, true)
   }
 }
 
@@ -228,19 +228,10 @@ const SetTargetFPS = symbols.rp_SetTargetFPS
 const DrawFPS = symbols.rp_DrawFPS
 const ClearBackground = (color) => symbols.rp_ClearBackground(color._address)
 const DrawText = (text, x, y, size, color) => symbols.rp_DrawText(cstr(text), x, y, size, color._address)
-const DrawTexture = (texture, tint) =>  symbols.rp_DrawTexture(texture._address, tint._address)
+const DrawTexture = (texture, x, y, tint) =>  symbols.rp_DrawTexture(texture._address, x, y, tint._address)
 const LoadTexture = (filename) => {
   const ret = new Texture()
   symbols.rp_LoadTexture(ret._address, cstr(filename))
-  console.log({
-    ...ret,
-    // trigger getters
-    id: ret.id,
-    width: ret.width,
-    height: ret.height,
-    mipmaps: ret.mipmaps,
-    format: ret.format
-  })
   return ret
 }
 
@@ -255,8 +246,7 @@ while (!WindowShouldClose()) {
   BeginDrawing()
   ClearBackground(RAYWHITE)
   DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
-  // this segfaults because texure is not returning right from LoadTexture
-  // DrawTexture(texBunny, 100, 100, WHITE)
+  DrawTexture(texBunny, 100, 100, WHITE)
   DrawFPS(10, 10)
   EndDrawing()
 }
