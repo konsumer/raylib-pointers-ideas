@@ -1,0 +1,22 @@
+{
+  "name": "raylib-pointers",
+  "version": "0.0.1",
+  "description": "The idea here is that this is raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node generator/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konsumer/raylib-pointers.git"
+  },
+  "author": "konsumer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/konsumer/raylib-pointers/issues"
+  },
+  "homepage": "https://github.com/konsumer/raylib-pointers#readme",
+  "devDependencies": {
+    "@raylib/api": "^4.5.1"
+  }
+}
