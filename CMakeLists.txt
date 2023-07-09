@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.0)
 project(raylib_pointers C)
 set(CMAKE_C_STANDARD 99)
 
-# Adding Raylib
 include(FetchContent)
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(BUILD_GAMES    OFF CACHE BOOL "" FORCE)

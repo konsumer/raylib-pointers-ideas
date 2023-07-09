@@ -4,42 +4,10 @@
 // this stuff would be in the interface header or whatever
 // setup all the struct defs in the consumer and use pointers instead of values
 
-#include <stdbool.h>
-#include <stdlib.h>
+// #include <stdbool.h>
+// #include <stdlib.h>
 
-typedef struct Texture {
-    unsigned int id;        // OpenGL texture id
-    int width;              // Texture base width
-    int height;             // Texture base height
-    int mipmaps;            // Mipmap levels, 1 by default
-    int format;             // Data format (PixelFormat type)
-} Texture;
-typedef Texture Texture2D;
-
-typedef struct Color {
-    unsigned char r;        // Color red value
-    unsigned char g;        // Color green value
-    unsigned char b;        // Color blue value
-    unsigned char a;        // Color alpha value
-} Color;
-
-void rp_InitWindow(int width, int height, const char *title);
-bool rp_WindowShouldClose(void);
-void rp_CloseWindow(void);
-void rp_SetTargetFPS(int fps);
-void rp_BeginDrawing(void);
-void rp_EndDrawing(void);
-void rp_DrawFPS(int posX, int posY); 
-void rp_ClearBackground(Color* color);
-void rp_DrawText(const char *text, int posX, int posY, int fontSize, Color* color);
-void rp_DrawTexture(Texture2D* texture, int posX, int posY, Color* tint);
-void rp_LoadTexture(Texture2D* ret, const char *fileName);
-
-Color* rp_LIGHTGRAY = &((Color){ 200, 200, 200, 255 });
-Color* rp_WHITE = &((Color){ 255, 255, 255, 255 });
-Color* rp_RAYWHITE = &((Color){ 245, 245, 245, 255 });
-
-// game starts here
+#include "api.h"
 
 Texture2D* texBunny;
 
