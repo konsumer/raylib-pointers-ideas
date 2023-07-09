@@ -5,7 +5,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-import { dlopen, suffix, ptr, toArrayBuffer } from 'bun:ffi'
+import { dlopen, suffix, ptr, toArrayBuffer, read } from 'bun:ffi'
 
 const ffi = {
    "rp_InitWindow": {
@@ -90,65 +90,6 @@ const ffi = {
       "cstring"
     ],
     "returns": "void"
-  },
-
-  "rp_malloc": {
-    "args": [
-      "i32"
-    ],
-    "returns": "ptr"
-  },
-  
-  "rp_free": {
-    "args": [
-      "ptr"
-    ],
-    "returns": "void"
-  },
-
-  "rp_get_u8": {
-    "args": [
-      "ptr"
-    ],
-    "returns": "u8"
-  },
-
-  "rp_set_u8": {
-    "args": [
-      "ptr",
-      "u8"
-    ],
-    "returns": "void"
-  },
-  
-  "rp_get_u32": {
-    "args": [
-      "ptr"
-    ],
-    "returns": "u32"
-  },
-
-  "rp_set_u32": {
-    "args": [
-      "ptr",
-      "u32"
-    ],
-    "returns": "void"
-  },
-
-  "rp_get_i32": {
-    "args": [
-      "ptr"
-    ],
-    "returns": "i32"
-  },
-
-  "rp_set_i32": {
-    "args": [
-      "ptr",
-      "i32"
-    ],
-    "returns": "void"
   }
 }
 
@@ -162,8 +103,9 @@ const cstr = s => ptr(Buffer.from((s || '\0')))
 class Color {
   constructor(init = {}, _address) {
     this._size = 4
-    this._address = _address || symbols.rp_malloc(this._size)
-    this._dv = new DataView(toArrayBuffer(this._address, 0, this._size))
+    this._buffer = new ArrayBuffer(this._size)
+    this._address = ptr(this._buffer)
+    this._dv = new DataView(this._buffer)
 
     this.r = init.r || 0
     this.g = init.g || 0
@@ -172,28 +114,28 @@ class Color {
   }
   
   get r () {
-    return this._dv.getUint8(0, true)
+    return this._dv.getUint8(0)
   }
   set r (r) {
     this._dv.setUint8(0, r)
   }
 
   get g () {
-    return this._dv.getUint8(1, true)
+    return this._dv.getUint8(1)
   }
   set g (g) {
      this._dv.setUint8(1, g)
   }
 
   get b () {
-    return this._dv.getUint8(2, true)
+    return this._dv.getUint8(2)
   }
   set b (b) {
      this._dv.setUint8(2, b)
   }
 
   get a () {
-    return this._dv.getUint8(3, true)
+    return this._dv.getUint8(3)
   }
   set a (a) {
      this._dv.setUint8(3, a)
@@ -203,8 +145,9 @@ class Color {
 class Texture {
   constructor(init = {}, _address) {
     this._size = 20
-    this._address = _address || symbols.rp_malloc(this._size)
-    this._dv = new DataView(toArrayBuffer(this._address, 0, this._size))
+    this._buffer = new ArrayBuffer(this._size)
+    this._address = ptr(this._buffer)
+    this._dv = new DataView(this._buffer)
 
     this.id = init.id || 0
     this.width = init.width || 0
@@ -214,35 +157,35 @@ class Texture {
   }
   
   get id () {
-    return this._dv.getUint32(0, true)
+    return this._dv.getUint32(0)
   }
   set id (id) {
     this._dv.setUint32(0, id)
   }
 
   get width () {
-    return this._dv.getInt32(4, true)
+    return this._dv.getInt32(4)
   }
   set width (width) {
     this._dv.setInt32(4, width)
   }
 
   get height () {
-    return this._dv.getInt32(8, true)
+    return this._dv.getInt32(8)
   }
   set height (height) {
     this._dv.setInt32(8, height)
   }
 
   get mipmaps () {
-    return this._dv.getInt32(12, true)
+    return this._dv.getInt32(12)
   }
   set mipmaps (mipmaps) {
     this._dv.setInt32(12, mipmaps)
   }
 
   get format () {
-    return this._dv.getInt32(16, true)
+    return this._dv.getInt32(16)
   }
   set format (format) {
     this._dv.setInt32(16, format)

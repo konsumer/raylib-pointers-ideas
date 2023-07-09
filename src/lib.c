@@ -25,7 +25,7 @@
 
 // these are simple wrappers used as utils from the host
 // in the case of bun/wasm this gives access to mem in pointers
-void* rp_malloc(size_t size) {
+void* rp_malloc(uint64_t size) {
   return malloc(size);
 }
 
