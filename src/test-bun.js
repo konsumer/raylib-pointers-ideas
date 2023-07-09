@@ -93,7 +93,8 @@ const ffi = {
 
 const { symbols } = dlopen(`${__dirname}/../build/libraylib_pointers.${suffix}`, ffi)
 
-const cstr = s => ptr(Buffer.from((s || '') + '\0'))
+const stringMemo = {}
+const cstr = s => stringMemo[s] ? stringMemo[s] : (stringMemo[s] = ptr(Buffer.from((s || '') + '\0'))) && stringMemo[s]
 
 // these are wrappers to make it all look more like normal raylib in js, this will also be generated
 
@@ -239,11 +240,12 @@ InitWindow(800, 450, "raylib-pointers test program")
 
 const texBunny = LoadTexture("wabbit_alpha.png")
 
+const s = cstr("Congrats! You created your first window!")
+
 while (!WindowShouldClose()) {
   BeginDrawing()
   ClearBackground(RAYWHITE)
-  // EXC_BAD_ACCESS
-  // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
+  DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
   DrawTexture(texBunny, 100, 100, WHITE)
   DrawFPS(10, 10)
   EndDrawing()
