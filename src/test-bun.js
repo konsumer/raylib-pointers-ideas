@@ -2,10 +2,7 @@
 
 // this will be in the library header, and be mostly generated:
 
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-import { dlopen, suffix, ptr, toArrayBuffer, read } from 'bun:ffi'
+import { dlopen, suffix, ptr, toArrayBuffer } from 'bun:ffi'
 
 const ffi = {
    "rp_InitWindow": {
@@ -238,14 +235,15 @@ const LoadTexture = (filename) => {
 // here the actual demo starts
 
 InitWindow(800, 450, "raylib-pointers test program")
-SetTargetFPS(60)
+// SetTargetFPS(60)
 
 const texBunny = LoadTexture("wabbit_alpha.png")
 
 while (!WindowShouldClose()) {
   BeginDrawing()
   ClearBackground(RAYWHITE)
-  DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
+  // EXC_BAD_ACCESS
+  // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
   DrawTexture(texBunny, 100, 100, WHITE)
   DrawFPS(10, 10)
   EndDrawing()
