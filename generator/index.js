@@ -18,17 +18,6 @@ out.push(`// pointer-raylib
 #include <stdlib.h>
 
 // TODO: put more in here for wasm, etc
-#if defined(_WIN32)
-    #if defined(BUILD_LIBTYPE_SHARED)
-        #if defined(__TINYC__)
-            #define __declspec(x) __attribute__((x))
-        #endif
-        #define RLP_EXPORT __declspec(dllexport)
-    #elif defined(USE_LIBTYPE_SHARED)
-        #define RLP_EXPORT __declspec(dllimport)
-    #endif
-#endif
-
 #ifndef RLP_EXPORT
     #define RLP_EXPORT
 #endif
@@ -78,7 +67,7 @@ for (const func of raylib.functions) {
     }
   }
 
-  // not a huge fan of some of these replacements, but it gets it building for now
+  // not a huge fan of this, but it gets it building for now
   for (const p in params) {
     params[p] = params[p].replace('...', 'char*')
   }

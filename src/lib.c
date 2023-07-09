@@ -1,22 +1,11 @@
 // pointer-raylib
-// File generated on 2023-07-09T18:03:18.641Z
+// File generated on 2023-07-09T18:07:48.776Z
 
 #include "raylib.h"
 #include <memory.h>
 #include <stdlib.h>
 
 // TODO: put more in here for wasm, etc
-#if defined(_WIN32)
-    #if defined(BUILD_LIBTYPE_SHARED)
-        #if defined(__TINYC__)
-            #define __declspec(x) __attribute__((x))
-        #endif
-        #define RLP_EXPORT __declspec(dllexport)
-    #elif defined(USE_LIBTYPE_SHARED)
-        #define RLP_EXPORT __declspec(dllimport)
-    #endif
-#endif
-
 #ifndef RLP_EXPORT
     #define RLP_EXPORT
 #endif
