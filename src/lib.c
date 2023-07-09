@@ -5,7 +5,6 @@
 #include <memory.h>
 #include <stdlib.h>
 
-
 // TODO: put more in here for wasm, etc
 #if defined(_WIN32)
     #if defined(BUILD_LIBTYPE_SHARED)
@@ -23,21 +22,21 @@
 #endif
 
 // these are just passed through, so name is the same
-RLP_EXPORT void rp_InitWindow(int32_t width, int32_t height, const char *title);
+RLP_EXPORT void rp_InitWindow(int width, int height, const char *title);
 RLP_EXPORT bool rp_WindowShouldClose(void);
 RLP_EXPORT void rp_CloseWindow(void);
 RLP_EXPORT void rp_SetTargetFPS(int fps);
 RLP_EXPORT void rp_BeginDrawing(void);
 RLP_EXPORT void rp_EndDrawing(void);
-RLP_EXPORT void rp_DrawFPS(int32_t posX, int32_t posY); 
+RLP_EXPORT void rp_DrawFPS(int posX, int posY); 
 
 // these use struct-pointers
 RLP_EXPORT void rp_ClearBackground(Color* color);
-RLP_EXPORT void rp_DrawText(const char *text, int32_t posX, int32_t posY, int32_t fontSize, Color* color);
-RLP_EXPORT void rp_DrawTexture(Texture2D* texture, int32_t posX, int32_t posY, Color* tint);
+RLP_EXPORT void rp_DrawText(const char *text, int posX, int posY, int fontSize, Color* color);
+RLP_EXPORT void rp_DrawTexture(Texture2D* texture, int posX, int posY, Color* tint);
 RLP_EXPORT void rp_LoadTexture(Texture2D* ret, const char *fileName);
 
-void rp_InitWindow(int32_t width, int32_t height, const char *title) {
+void rp_InitWindow(int width, int height, const char *title) {
   InitWindow(width, height, title);
 }
 
@@ -49,7 +48,7 @@ void rp_CloseWindow(void) {
   CloseWindow();
 }
 
-void rp_SetTargetFPS(int32_t fps){
+void rp_SetTargetFPS(int fps){
   SetTargetFPS(fps);
 }
 
@@ -61,7 +60,7 @@ void rp_EndDrawing(void){
   EndDrawing();
 }
 
-void rp_DrawFPS(int32_t posX, int32_t posY){
+void rp_DrawFPS(int posX, int posY){
   DrawFPS(posX, posY);
 }
 
@@ -69,11 +68,11 @@ void rp_ClearBackground(Color* color) {
   ClearBackground(*color);
 }
 
-void rp_DrawText(const char *text, int32_t posX, int32_t posY, int32_t fontSize, Color* color) {
+void rp_DrawText(const char *text, int posX, int posY, int fontSize, Color* color) {
   DrawText(text, posX, posY, fontSize, *color);
 }
 
-void rp_DrawTexture(Texture2D* texture, int32_t posX, int32_t posY, Color* tint) {
+void rp_DrawTexture(Texture2D* texture, int posX, int posY, Color* tint) {
   DrawTexture(*texture, posX, posY, *tint);
 }
 
