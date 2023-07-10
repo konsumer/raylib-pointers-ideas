@@ -16,6 +16,9 @@ npm run build
 
 # build wasm that expects raylib-poinbters to be exposed in host
 npm run build:wasm1
+
+# load the wasm in a node host and call InitGame/UpdateGame to make sure it's calling all the functions
+node src/test-wasm.js
 ```
 
 You can see what I am trying to do in `src/test.c`, and similar will be implemented for other targets, like `src/test-bun.js`
