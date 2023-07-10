@@ -2,42 +2,48 @@
 
 import { readFile } from 'fs/promises'
 
+// there is probly a better way to malloc on host,. but I think this will eventually go away
+let currentPtr = 0
+
 const env = {
   raylib: {
-    rp_InitWindow() {
+    rp_InitWindow () {
       console.log('InitWindow', arguments)
     },
-    rp_LoadTexture(){
+    rp_LoadTexture () {
       console.log('LoadTexture', arguments)
     },
-    rp_BeginDrawing(){
+    rp_BeginDrawing () {
       console.log('BeginDrawing')
     },
-    rp_ClearBackground(){
+    rp_ClearBackground () {
       console.log('ClearBackground', arguments)
     },
-    rp_DrawText(){
+    rp_DrawText () {
       console.log('DrawText', arguments)
     },
-    rp_DrawTexture(){
+    rp_DrawTexture () {
       console.log('DrawTexture', arguments)
     },
-    rp_DrawFPS(){
+    rp_DrawFPS () {
       console.log('DrawFPS', arguments)
     },
-    rp_EndDrawing(){
+    rp_EndDrawing () {
       console.log('EndDrawing')
     }
   },
-  
+
   env: {
-    malloc(size) {
-      console.log('malloc', size)
+    malloc (size) {
+      const ptr = currentPtr
+      console.log('malloc', size, ptr)
+      currentPtr += size
+      return ptr
     }
   }
 }
 
-const { instance: { exports } } = await WebAssembly.instantiate(await readFile("game.wasm"), env)
+const { instance: { exports } } = await WebAssembly.instantiate(await readFile('game.wasm'), env)
 
 exports.InitGame()
 exports.UpdateGame()

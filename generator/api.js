@@ -1,10 +1,13 @@
 import { raylib } from '@raylib/api'
 import { writeFile } from 'fs/promises'
 
-const [,,filename] = process.argv
+// TODO: generate seperate headers for rp_ (native) or use RP_NATIVE somehow
+const prefix = 'rp_'
+
+const [,, filename] = process.argv
 
 if (!filename) {
-  console.error('Usage: cnative <FILENAME>')
+  console.error('Usage: api <FILENAME>')
   process.exit(1)
 }
 
@@ -38,7 +41,7 @@ out.push(`// pointer-raylib
 
 `)
 
-const mappedStructs = raylib.structs.reduce((a, c) => ({...a, [c.name]: c}), {})
+const mappedStructs = raylib.structs.reduce((a, c) => ({ ...a, [c.name]: c }), {})
 const structs = Object.keys(mappedStructs)
 
 const aliases = {}
@@ -50,30 +53,30 @@ for (const alias of raylib.aliases) {
 
 for (const struct of Object.values(mappedStructs)) {
   const fields = struct.fields.map(field => {
-      const m = (/([a-zA-Z0-9_]+)\[([0-9]+)\]/gm).exec(field.type)
-      if (m) {
-        field.type = m[1]
-        field.name = `${field.name}[${m[2]}]`
-      }
-      return field
-    })
-    out.push(`
+    const m = (/([a-zA-Z0-9_]+)\[([0-9]+)\]/gm).exec(field.type)
+    if (m) {
+      field.type = m[1]
+      field.name = `${field.name}[${m[2]}]`
+    }
+    return field
+  })
+  out.push(`
 /*
  * ${struct.description}
  */
 typedef struct ${struct.name} {
 ${fields.map(f => `  ${f.type} ${f.name}; // ${f.description}`).join('\n')}
 } ${struct.name};`)
-    for (const alias of (aliases[struct.name] || [])) {
-      out.push(`\n// ${alias.description}\ntypedef ${alias.type} ${alias.name};`)
-    }
+  for (const alias of (aliases[struct.name] || [])) {
+    out.push(`\n// ${alias.description}\ntypedef ${alias.type} ${alias.name};`)
+  }
 }
 
 // only do colors
 out.push('')
 for (const d of raylib.defines) {
-  if (typeof d.value === 'string' && d.value.includes('CLITERAL(Color)')){
-    out.push(`Color * rp_${d.name} = ${d.value.replace('CLITERAL(Color)', '&((Color) ')}); // ${d.description}`)
+  if (typeof d.value === 'string' && d.value.includes('CLITERAL(Color)')) {
+    out.push(`Color * ${prefix}${d.name} = ${d.value.replace('CLITERAL(Color)', '&((Color) ')}); // ${d.description}`)
   }
 }
 out.push('#endif // RP_NATIVE\n')
@@ -125,10 +128,9 @@ for (const func of raylib.functions) {
     params[p] = params[p].replace('...', 'char*')
   }
 
-  out.push(`RLP_EXPORT ${returnType} rp_${func.name}(${params.join(', ')});\n`)
- 
+  out.push(`RLP_EXPORT ${returnType} ${prefix}${func.name}(${params.join(', ')});\n`)
 
-  end.push(`${returnType} rp_${func.name}(${params.join(', ')}) {
+  end.push(`${returnType} ${prefix}${func.name}(${params.join(', ')}) {
     ${callBefore}${outputReturn}${func.name}(${paramsCall.join(', ')});${callAfter}
 }
     `)
