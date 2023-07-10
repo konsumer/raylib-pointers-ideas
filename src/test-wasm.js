@@ -2,7 +2,7 @@
 
 import { readFile } from 'fs/promises'
 
-// there is probly a better way to malloc on host,. but I think this will eventually go away
+// there is probly a better way to malloc on host, but I think this will eventually go away (should malloc inside wasm)
 let currentPtr = 0
 
 const env = {
