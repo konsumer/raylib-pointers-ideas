@@ -17,7 +17,7 @@ npm run build
 # build wasm that expects raylib-poinbters to be exposed in host
 npm run build:wasm1
 
-# load the wasm in a node host and call InitGame/UpdateGame to make sure it's calling all the functions
+# load wasm1 in a node host and call InitGame/UpdateGame to make sure it's calling all the functions in your code
 node src/test-wasm.js
 ```
 
@@ -27,7 +27,7 @@ You can see what I am trying to do in `src/test.c`, and similar will be implemen
 The eventual goal is a pointer-based interface that will work on these targets:
 
 - wasm1 - Wasm code - your code (written in something compiled to wasm) will import pointer-based functions from (native or web) host.
-- wasm2 - Wasm runtime - a host (written in JS) will direclty call pointer-based raylib functions from wasm, which will call back into the wasm-host and use browser functions
+- wasm2 - Wasm runtime - a host (written in JS) will direclty call pointer-based raylib functions from wasm, which will call back into the wasm-host and use browser functions. The purpose of this is JS code written in browser that can call raylib functions.
 - Bun FFI - Bun will import the DLL and call the functions in JS code.
 
 
