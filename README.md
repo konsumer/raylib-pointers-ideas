@@ -39,4 +39,5 @@ This is not a perfect 1-to-1 mapping of regular C raylib, and a few things are s
 - vargs are not really supported in a lot of places (like over wasm boundary) so functions that use them might not work the same. `TraceLog` is a good example, and `TextFormat`. It is recommended to use the C-side WASI equivilants (`printf`, etc) if possible.
 - I am still working on the wasm-build. It currently imports `malloc` which I think should be internal (and exported to host, instead.)
 - I should make some sort of JS-side wrapper for arrays like `new FloatArray(32)`
-- I should update [raylib-wasm](https://github.com/konsumer/raylib-wasm) to use wasm2, once I figure it all out. I think it will be like emscripten-compile something like native, so it's essentially raylib with pointers on the JS-side, then add soem nice helpers to work with that.
+- Fixed-length strings (`char[32]`) are considered arrays of uint8's. I need to make it so, for example, bun sees them as cstrings.
+- I should update [raylib-wasm](https://github.com/konsumer/raylib-wasm) to use wasm2, once I figure it all out. I think it will be like emscripten-compile something like native, so it's essentially raylib with pointers on the JS-side, then add some nice helpers to work with that.
