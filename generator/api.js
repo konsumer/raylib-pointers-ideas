@@ -1,7 +1,5 @@
-import api from '@raylib/api'
+import { raylib } from '@raylib/api'
 import { writeFile } from 'fs/promises'
-
-const { raylib, raymath } = api
 
 const [,,filename] = process.argv
 
@@ -12,8 +10,12 @@ if (!filename) {
 
 const out = []
 
-out.push(`// pointer-raylib API
+out.push(`// pointer-raylib
 // File generated on ${(new Date()).toISOString()}
+
+#ifdef RP_NATIVE
+  #include "raylib.h"
+#endif // RP_NATIVE
 
 #include <memory.h>
 #include <stdlib.h>
@@ -24,20 +26,27 @@ out.push(`// pointer-raylib API
 #endif
 
 // TODO: not sure how to map these
-typedef void rAudioProcessor;
-typedef void rAudioBuffer;
+#ifndef RP_NATIVE
+  typedef void rAudioProcessor;
+  typedef void rAudioBuffer;
+  typedef void* TraceLogCallback;
+  typedef void* LoadFileDataCallback;
+  typedef void* SaveFileDataCallback;
+  typedef void* LoadFileTextCallback;
+  typedef void* SaveFileTextCallback;
+  typedef void* AudioCallback;
 
 `)
 
 const mappedStructs = raylib.structs.reduce((a, c) => ({...a, [c.name]: c}), {})
+const structs = Object.keys(mappedStructs)
 
 const aliases = {}
 for (const alias of raylib.aliases) {
   aliases[alias.type] = aliases[alias.type] || []
   aliases[alias.type].push(alias)
+  structs.push(alias.name)
 }
-
-const structs = Object.keys(mappedStructs)
 
 for (const struct of Object.values(mappedStructs)) {
   const fields = struct.fields.map(field => {
@@ -56,7 +65,7 @@ typedef struct ${struct.name} {
 ${fields.map(f => `  ${f.type} ${f.name}; // ${f.description}`).join('\n')}
 } ${struct.name};`)
     for (const alias of (aliases[struct.name] || [])) {
-      out.push(`// ${alias.description}\ntypedef ${alias.type} ${alias.name};`)
+      out.push(`\n// ${alias.description}\ntypedef ${alias.type} ${alias.name};`)
     }
 }
 
@@ -67,14 +76,13 @@ for (const d of raylib.defines) {
     out.push(`Color * rp_${d.name} = ${d.value.replace('CLITERAL(Color)', '&((Color) ')}); // ${d.description}`)
   }
 }
-out.push('')
+out.push('#endif // RP_NATIVE\n')
+
+// TODO: enums and a few other defines
+
+const end = []
 
 for (const func of raylib.functions) {
-  // TODO: leaving out the cllback functions, because not sure how to deal with them
-  if (func.name.includes('Callback') || func.name.includes('Detach') || func.name.includes('Attach')) {
-    continue
-  }
-
   out.push('/**')
   out.push(` * ${func.description}`)
   out.push(' */')
@@ -82,11 +90,15 @@ for (const func of raylib.functions) {
   let callBefore = ''
   let callAfter = ''
   const params = []
+  const paramsCall = []
   let returnType = 'void'
+  let outputReturn = ''
 
   // Return
   if (structs.includes(func.returnType)) {
     params.push(`${func.returnType}* output`)
+    outputReturn = `${func.returnType} val = `
+    callAfter = `\n    memcpy(output, &val, sizeof(${func.returnType}));`
   } else {
     returnType = func.returnType
   }
@@ -100,8 +112,10 @@ for (const func of raylib.functions) {
     for (const param of func.params) {
       if (structs.includes(param.type)) {
         params.push(`${param.type}* ${param.name}`)
+        paramsCall.push(`*${param.name}`)
       } else {
         params.push(`${param.type} ${param.name}`)
+        paramsCall.push(`${param.name}`)
       }
     }
   }
@@ -110,9 +124,20 @@ for (const func of raylib.functions) {
   for (const p in params) {
     params[p] = params[p].replace('...', 'char*')
   }
- 
 
   out.push(`RLP_EXPORT ${returnType} rp_${func.name}(${params.join(', ')});\n`)
+ 
+
+  end.push(`${returnType} rp_${func.name}(${params.join(', ')}) {
+    ${callBefore}${outputReturn}${func.name}(${paramsCall.join(', ')});${callAfter}
 }
+    `)
+}
+
+out.push(`
+#ifdef RP_NATIVE
+${end.join('\n')}
+#endif // RP_NATIVE
+`)
 
 await writeFile(filename, out.join('\n'))

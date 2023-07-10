@@ -4,7 +4,7 @@
   "description": "The idea here is that this is raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
   "type": "module",
   "scripts": {
-    "generate": "node generator/native.js src/lib.c && node generator/interface_header.js src/api.h",
+    "generate": "node generator/api.js src/api.h",
     "build": "npm run generate && cmake -B build && cmake --build build"
   },
   "repository": {
