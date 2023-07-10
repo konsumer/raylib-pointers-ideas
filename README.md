@@ -8,8 +8,14 @@ This is similar to what emscripten does, and should help with lower-to-the-groun
 # install deps
 npm i
 
-# generate code and build C things
+# test out the code-generation
+npm run generate
+
+# full build of everything except wasm demo
 npm run build
+
+# build wasm that expects raylib-poinbters to be exposed in host
+npm run build:wasm1
 ```
 
 You can see what I am trying to do in `src/test.c`, and similar will be implemented for other targets, like `src/test-bun.js`
