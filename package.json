@@ -6,7 +6,7 @@
   "scripts": {
     "generate": "node generator/api.js src/api.h",
     "build": "npm run generate && cmake -B build && cmake --build build",
-    "build:wasm1": "docker run -it --rm -v $(pwd):/cart null0 clang --target=wasm32 -Wl,--allow-undefined -Wl,--export-all -nostdlib -Wl,--no-entry -o game.wasm src/test-wasm1.c"
+    "build:wasm1": "docker run -it --rm -v $(pwd):/cart null0 clang --target=wasm32 -nostdlib -Wl,--allow-undefined -Wl,--export-all -Wl,--no-entry -o game.wasm src/test-wasm1.c"
   },
   "repository": {
     "type": "git",
