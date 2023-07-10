@@ -3,7 +3,6 @@
 #define RLP_EXPORT __attribute__((import_module("raylib"))) 
 #include "api.h"
 
-
 Texture2D* texBunny;
 
 WASM_EXPORT void InitGame() {

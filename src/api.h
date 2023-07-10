@@ -1,11 +1,10 @@
 // pointer-raylib
-// File generated on 2023-07-10T02:29:20.811Z
+// File generated on 2023-07-10T05:54:37.960Z
 
 #ifdef RP_NATIVE
   #include "raylib.h"
 #endif // RP_NATIVE
 
-#include <memory.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
