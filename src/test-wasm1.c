@@ -4,11 +4,15 @@
 #include "api.h"
 
 Texture2D* texBunny;
+Texture2D* texBunny2;
 
 WASM_EXPORT void InitGame() {
   rp_InitWindow(800, 450, "raylib-pointers test program");
+
   texBunny = (Texture2D*) malloc(sizeof(Texture2D));
   rp_LoadTexture(texBunny, "wabbit_alpha.png");
+  texBunny2 = (Texture2D*) malloc(sizeof(Texture2D));
+  rp_LoadTexture(texBunny2, "wabbit_alpha.png");
 }
 
 WASM_EXPORT void UpdateGame() {
