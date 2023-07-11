@@ -11,7 +11,7 @@
     "test:node": "node src/test-wasm.js",
     "test:native": "./build/raylib_pointers_test",
     "pretest:bun": "npm run build",
-    "pretest:node": "npm run build",
+    "pretest:node": "npm run build:wasm1",
     "pretest:native": "npm run build"
   },
   "repository": {

@@ -1,6 +1,6 @@
 // these will maybe eventually be part of the generated header
 #define WASM_EXPORT extern
-#define RLP_EXPORT __attribute__((import_module("raylib"))) 
+#define RLP_EXPORT __attribute__((import_module("raylib"))) extern
 #include "api.h"
 
 Texture2D* texBunny;
