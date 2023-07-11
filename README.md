@@ -35,7 +35,7 @@ The eventual goal is a pointer-based interface that will work on these targets:
 
 This is not a perfect 1-to-1 mapping of regular C raylib, and a few things are still a WIP.
 
-- names have `rp_` prefix (defined in generator) to prevent clashes. This may eventually be removed if the native raylib is not loaded (no `RP_NATIVE`.) There is probly some better C-way to do this with defines, so when RP_NATIVE` is not defined, it will use the no-prefix names.
+- names have `rp_` prefix (defined in generator) to prevent clashes. This may eventually be removed if the native raylib is not loaded (no `RP_NATIVE`.) There is probly some better C-way to do this with defines, so when `RP_NATIVE` is not defined, it will use the no-prefix names.
 - vargs are not really supported in a lot of places (like over wasm boundary) so functions that use them might not work the same. `TraceLog` is a good example, and `TextFormat`. It is recommended to use the C-side WASI equivilants (`printf`, etc) if possible.
 - I am still working on the wasm-build. It currently imports `malloc` which I think should be internal (and exported to host, instead.)
 - I should make some sort of JS-side wrapper for arrays like `new FloatArray(32)`
