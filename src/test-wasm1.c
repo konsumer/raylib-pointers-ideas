@@ -1,5 +1,5 @@
 // these will maybe eventually be part of the generated header
-#define WASM_EXPORT extern
+#define WASM_EXPORT __attribute__((visibility("default")))
 #define RLP_EXPORT __attribute__((import_module("raylib"))) extern
 #include "api.h"
 

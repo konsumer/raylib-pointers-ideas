@@ -2,17 +2,162 @@
 
 import { readFile } from 'fs/promises'
 
-let lastPtr = 0
+let i = 0
 
-const env = {
+const decoder = new TextDecoder()
+
+// pull a c-string (UTF8, null-terminated) from WASM-memory
+const str = ptr => {
+  let p = ptr
+  while(memory.getUint8(p) !== 0) { p++ }
+  return decoder.decode(memory.buffer.slice(ptr, p))
+}
+
+class Color {
+  constructor(init = {}, _address) {
+    this._size = 4
+    this._address = _address || exports.malloc(this._size)
+
+    for (const f of Object.keys(init)) {
+      this[f] = init[f]
+    }
+
+    // console.log('Color', this._address, memory.buffer.slice(this._address, this._address + this._size))
+  }
+  
+  get r () {
+    return memory.getUint8(this._address + 0)
+  }
+  set r (r) {
+    console.log('r', r)
+    memory.setUint8(this._address + 0, r)
+  }
+
+  get g () {
+    return memory.getUint8(this._address + 1)
+  }
+  set g (g) {
+    console.log('g', g)
+    memory.setUint8(this._address + 1, g)
+  }
+
+  get b () {
+    return memory.getUint8(this._address + 2)
+  }
+  set b (b) {
+    console.log('b', b)
+    memory.setUint8(this._address + 2, b)
+  }
+
+  get a () {
+    return memory.getUint8(this._address + 3)
+  }
+  set a (a) {
+    console.log('a', a)
+    memory.setUint8(this._address + 3, a)
+  }
+}
+
+class Texture {
+  constructor(init = {}, _address) {
+    this._size = 20
+    this._address = _address || exports.malloc(this._size)
+
+    for (const f of Object.keys(init)) {
+      this[f] = init[f]
+    }
+
+    // console.log('Texture', this._address, memory.buffer.slice(this._address, this._address + this._size))
+  }
+  
+  get id () {
+    return memory.getUint32(this._address + 0)
+  }
+  set id (id) {
+    memory.setUint32(this._address + 0, id)
+  }
+
+  get width () {
+    return memory.getInt32(this._address + 4)
+  }
+  set width (width) {
+    memory.setInt32(this._address + 4, width)
+  }
+
+  get height () {
+    return memory.getInt32(this._address + 8)
+  }
+  set height (height) {
+    memory.setInt32(this._address + 8, height)
+  }
+
+  get mipmaps () {
+    return memory.getInt32(this._address + 12)
+  }
+  set mipmaps (mipmaps) {
+    memory.setInt32(this._address + 12, mipmaps)
+  }
+
+  get format () {
+    return memory.getInt32(this._address + 16)
+  }
+  set format (format) {
+    memory.setInt32(this._address + 16, format)
+  }
+}
+
+const imports = {
   raylib: {
-    rp_InitWindow() { console.log('InitWindow', arguments)},
-    rp_LoadTexture(){ console.log('LoadTexture', arguments) },
+    rp_InitWindow(width, height, titlePtr) {
+      console.log('InitWindow', {
+        width,
+        height,
+        title: str(titlePtr)
+      })
+    },
+    
+    rp_LoadTexture(retPtr, filenamePtr){
+      // example of filling in the return
+      const t = new Texture({id: i++, width: 32, height: 32, mipmaps: 2}, retPtr)
+      console.log('LoadTexture', {
+        filename: str(filenamePtr),
+        returns: `Texture(id:${t.id}, width:${t.width}, height:${t.height}, mipmaps:${t.mipmaps}, format:${t.format})`
+      })
+    },
+
     rp_BeginDrawing(){ console.log('BeginDrawing') },
-    rp_ClearBackground(){ console.log('ClearBackground', arguments) },
-    rp_DrawText(){ console.log('DrawText', arguments) },
-    rp_DrawTexture(){ console.log('DrawTexture', arguments) },
-    rp_DrawFPS(){ console.log('DrawFPS', arguments) },
+
+    rp_ClearBackground(colorPtr){
+      const c = new Color({}, colorPtr)
+      console.log('ClearBackground', {
+        color: `Color(${c.r}, ${c.g}, ${c.b}, ${c.a})`
+      })
+    },
+    
+    rp_DrawText(textPtr, x, y, fontSize, colorPtr){
+      const c = new Color({}, colorPtr)
+      console.log('DrawText', {
+        text: str(textPtr),
+        x,
+        y,
+        fontSize,
+        color: `Color(${c.r}, ${c.g}, ${c.b}, ${c.a})`
+      })
+    },
+    
+    rp_DrawTexture(texturePtr, x, y, colorPtr){
+      const c = new Color({}, colorPtr)
+      const t = new Texture({}, texturePtr)
+      console.log('DrawTexture', {
+        texture: `Texture(id:${t.id}, width:${t.width}, height:${t.height}, mipmaps:${t.mipmaps}, format:${t.format})`,
+        x,
+        y,
+        color: `Color(${c.r}, ${c.g}, ${c.b}, ${c.a})`
+      })
+    },
+    
+    rp_DrawFPS(x, y){ console.log('DrawFPS', {x, y}) },
+    
     rp_EndDrawing(){ console.log('EndDrawing') }
   },
 
@@ -66,7 +211,8 @@ const env = {
   }
 }
 
-const { instance: { exports } } = await WebAssembly.instantiate(await readFile("game.wasm"), env)
+const { instance: { exports } } = await WebAssembly.instantiate(await readFile("game.wasm"), imports)
+const memory = new DataView(exports.memory.buffer)
 
 exports.InitGame()
 exports.UpdateGame()
