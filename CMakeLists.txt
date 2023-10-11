@@ -12,7 +12,7 @@ set(CMAKE_BUILD_TYPE "Release")
 FetchContent_Declare(raylib GIT_REPOSITORY https://github.com/raysan5/raylib.git GIT_TAG 4.5.0)
 FetchContent_MakeAvailable(raylib)
 
-add_library(${PROJECT_NAME} SHARED src/lib.c)
+add_library(${PROJECT_NAME} STATIC src/lib.c)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
 add_executable(${PROJECT_NAME}_test src/lib.c src/test.c)
