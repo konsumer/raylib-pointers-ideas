@@ -26,12 +26,20 @@ void UpdateGame() {
   rp_EndDrawing();
 }
 
+void UnloadGame() {
+  // Unload the texture, and free the object
+  rp_UnloadTexture(texBunny);
+  free((void*)texBunny);
+
+  rp_CloseWindow();
+}
+
 int main(void) {
   InitGame();
   rp_SetTargetFPS(60);
   while (!rp_WindowShouldClose()) {
     UpdateGame();
   }
-  rp_CloseWindow();
+  UnloadGame();
   return 0;
 }
