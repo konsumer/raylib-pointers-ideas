@@ -18,16 +18,12 @@ Functions that don't return struct-vals, or take struct-val params will just sta
 bool rp_WindowShouldClose(void);
 ```
 
-
 ## development
 
 ```
-# install deps
-npm i
-
 # run the code-generation
-npm run generate
+bun run generate
 
 # full build of everything
-npm run build
+bun run build
 ```

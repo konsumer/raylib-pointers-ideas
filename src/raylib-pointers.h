@@ -1,4 +1,4 @@
-// raylib-pointer wrapper generated at 2024-06-23T05:06:04.901Z for 4.6.0
+// raylib-pointer wrapper generated at 2024-06-23T05:29:00.208Z for 4.6.0
 
 #include "raylib.h"
 

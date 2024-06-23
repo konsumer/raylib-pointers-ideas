@@ -5,8 +5,9 @@
   "description": "Raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
   "type": "module",
   "scripts": {
-    "generate": "node tools/generate_api.js > src/raylib-pointers.h",
-    "build": "npm run generate && cmake -B build && cmake --build build"
+    "generate:lib": "bun tools/generate_api.js > src/raylib-pointers.h",
+    "generate:bun": "bun tools/generate_bun.js > example/raylib.js",
+    "build": "cmake -B build && cmake --build build"
   },
   "repository": {
     "type": "git",
