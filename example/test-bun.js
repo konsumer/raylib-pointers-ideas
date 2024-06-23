@@ -15,14 +15,12 @@ const ffi = {
   },
 
   rp_WindowShouldClose: {
-    args: [
-    ],
+    args: [],
     returns: 'bool'
   },
 
   rp_CloseWindow: {
-    args: [
-    ],
+    args: [],
     returns: 'void'
   },
 
@@ -34,14 +32,12 @@ const ffi = {
   },
 
   rp_BeginDrawing: {
-    args: [
-    ],
+    args: [],
     returns: 'void'
   },
 
   rp_EndDrawing: {
-    args: [
-    ],
+    args: [],
     returns: 'void'
   },
 
@@ -90,7 +86,7 @@ const ffi = {
   }
 }
 
-const { symbols } = dlopen(`${__dirname}/../build/libraylib_pointers.${suffix}`, ffi)
+const { symbols } = dlopen(`${__dirname}/../build/libraylib-pointers.${suffix}`, ffi)
 
 const cstr = s => ptr(Buffer.from((s || '') + '\0'))
 
@@ -245,7 +241,7 @@ const LoadTexture = (filename) => {
 InitWindow(800, 450, 'raylib-pointers test program')
 SetTargetFPS(60)
 
-const texBunny = LoadTexture('wabbit_alpha.png')
+const texBunny = LoadTexture('example/wabbit_alpha.png')
 
 const s = cstr('Congrats! You created your first window!')
 

@@ -1,18 +1,12 @@
 {
   "name": "raylib-pointers",
+  "private": true,
   "version": "0.0.1",
-  "description": "The idea here is that this is raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
+  "description": "Raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function.",
   "type": "module",
   "scripts": {
-    "generate": "node generator/api.js src/api.h",
-    "build": "npm run generate && cmake -B build && cmake --build build",
-    "build:wasm1": "docker run -it --rm -v $(pwd):/cart null0 ./build_wasm.sh -o game.wasm src/test-wasm1.c",
-    "test:bun": "bun src/test-bun.js",
-    "test:node": "node src/test-wasm.js",
-    "test:native": "./build/raylib_pointers_test",
-    "pretest:bun": "npm run build",
-    "pretest:node": "npm run build:wasm1",
-    "pretest:native": "npm run build"
+    "generate": "node tools/generate_api.js > src/raylib-pointers.h",
+    "build": "npm run generate && cmake -B build && cmake --build build"
   },
   "repository": {
     "type": "git",
@@ -23,8 +17,5 @@
   "bugs": {
     "url": "https://github.com/konsumer/raylib-pointers/issues"
   },
-  "homepage": "https://github.com/konsumer/raylib-pointers#readme",
-  "devDependencies": {
-    "@raylib/api": "^4.5.1"
-  }
+  "homepage": "https://github.com/konsumer/raylib-pointers#readme"
 }
