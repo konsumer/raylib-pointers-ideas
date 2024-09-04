@@ -1,3 +1,7 @@
+> [!NOTE]  
+> Work on this has been moved to [raylib-pointers](https://github.com/konsumer/raylib-pointers).
+
+
 The idea here is that this is raylib, but all structs are pointers, and all struct-returns are moved to the first paramater of the function. This is similar to what emscripten/clang does, and is meant to help with bunjs ffi (and others) which can only use pointers, not values of non-numbers.
 
 Every raylib function gets a `rp_` prefix.
